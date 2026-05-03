@@ -6,8 +6,8 @@ const examsData = [
     // WA2 Assessments
     { name: 'Mathematics WA2', date: new Date(2026, 4, 4), category: 'wa2', type: 'WA2' },
     { name: 'Social Studies WA2', date: new Date(2026, 4, 4), category: 'wa2', type: 'WA2' },
-    { name: 'Additional Mathematics WA2', date: new Date(2026, 4, 7), category: 'wa2', type: 'WA2' },
-    { name: 'Chemistry WA2', date: new Date(2026, 4, 8), category: 'wa2', type: 'WA2' },
+    { name: 'Additional Mathematics WA2', date: new Date(2026, 4, 5), category: 'wa2', type: 'WA2' },
+    { name: 'Chemistry WA2', date: new Date(2026, 4, 6), category: 'wa2', type: 'WA2' },
     
     // O-Levels
     { name: 'Tamil Paper 1 & 2', date: new Date(2026, 5, 2), category: 'o-level', type: 'O-Level' },
