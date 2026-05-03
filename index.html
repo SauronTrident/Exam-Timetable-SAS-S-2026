@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Countdown 2026</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">📚</span>
+                <span class="logo-text">EXAM COUNTDOWN 2026</span>
+            </div>
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Next Exam In</h1>
+            <div class="next-exam-card" id="nextExamCard">
+                <div class="countdown-display">
+                    <span class="days-count" id="nextDaysCount">1</span>
+                    <span class="days-label">DAYS</span>
+                </div>
+                <div class="exam-details">
+                    <h2 id="nextExamName">Mathematics & Social Studies WA2</h2>
+                    <p id="nextExamDate">Tomorrow • 04 May 2026</p>
+                    <span class="urgency-badge urgent" id="nextExamStatus">🚨 CRITICAL</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Dashboard -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-content">
+                    <p class="stat-value" id="totalExams">24</p>
+                    <p class="stat-label">Total Exams</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🚨</div>
+                <div class="stat-content">
+                    <p class="stat-value" id="urgentCount">2</p>
+                    <p class="stat-label">Urgent (0-3 days)</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📌</div>
+                <div class="stat-content">
+                    <p class="stat-value" id="highCount">2</p>
+                    <p class="stat-label">High Priority (4-7 days)</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-content">
+                    <p class="stat-value" id="plannedCount">18</p>
+                    <p class="stat-label">Planned (30+ days)</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✓</div>
+                <div class="stat-content">
+                    <p class="stat-value" id="completedCount">0</p>
+                    <p class="stat-label">Completed</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-content">
+                    <p class="stat-value" id="progressPercent">0%</p>
+                    <p class="stat-label">Progress</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+        <div class="filter-container">
+            <h3>Filter Exams</h3>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="urgent">⚠️ Urgent</button>
+                <button class="filter-btn" data-filter="wa2">WA2</button>
+                <button class="filter-btn" data-filter="o-level">O-Levels</button>
+                <button class="filter-btn" data-filter="completed">✓ Completed</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exams Timeline -->
+    <section class="exams-section">
+        <div class="exams-container">
+            <h2 class="section-title">📍 Your Exam Timeline</h2>
+            
+            <!-- WA2 Section -->
+            <div class="exam-category" data-category="wa2">
+                <h3 class="category-title">🔴 WA2 ASSESSMENTS (MAY)</h3>
+                <div class="exams-list" id="wa2-list"></div>
+            </div>
+
+            <!-- O-Levels Section -->
+            <div class="exam-category" data-category="o-level">
+                <h3 class="category-title">🎓 O-LEVELS (JUNE - NOVEMBER)</h3>
+                <div class="exams-list" id="o-level-list"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 Exam Countdown Tracker. Study hard! 📚✨</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
