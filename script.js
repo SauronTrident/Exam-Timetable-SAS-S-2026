@@ -1,5 +1,5 @@
-// Reference Date: 03 May 2026
-const REFERENCE_DATE = new Date(2026, 4, 3); // May 3, 2026
+// Reference Date: Today's date (auto-updates as days pass)
+const REFERENCE_DATE = new Date();
 
 // All exam data
 const examsData = [
@@ -211,7 +211,11 @@ function updateNextExam() {
     if (nextExam) {
         document.getElementById('nextDaysCount').textContent = nextExam.daysRemaining;
         document.getElementById('nextExamName').textContent = nextExam.exam.name;
-        document.getElementById('nextExamDate').textContent = `${formatDate(nextExam.exam.date)}`;
+        
+        let dateDisplay = formatDate(nextExam.exam.date);
+        if (nextExam.daysRemaining === 0) dateDisplay = 'Today • ' + dateDisplay;
+        else if (nextExam.daysRemaining === 1) dateDisplay = 'Tomorrow • ' + dateDisplay;
+        document.getElementById('nextExamDate').textContent = dateDisplay;
         
         const urgency = getUrgencyLevel(nextExam.daysRemaining);
         const status = getStatusText(nextExam.daysRemaining);
