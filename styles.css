@@ -491,6 +491,7 @@ body.dark-mode {
     display: flex;
     gap: 0.8rem;
     margin-top: 1.5rem;
+    flex-wrap: wrap;
 }
 
 .action-btn {
@@ -527,6 +528,18 @@ body.dark-mode {
     background: rgba(100, 200, 100, 0.4);
     border-color: #64c864;
     box-shadow: 0 0 15px rgba(100, 200, 100, 0.3);
+}
+
+.action-btn.delete-btn {
+    background: rgba(255, 46, 99, 0.2);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.action-btn.delete-btn:hover {
+    background: rgba(255, 46, 99, 0.4);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(255, 46, 99, 0.3);
 }
 
 .note-input-container {

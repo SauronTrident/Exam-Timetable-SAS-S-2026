@@ -84,6 +84,7 @@ function createExamCard(exam, index) {
                     ${isCompleted ? '↩️ Undo' : '✓ Done'}
                 </button>
                 <button class="action-btn" onclick="toggleNoteInput(${index})">📝 Note</button>
+                <button class="action-btn delete-btn" onclick="deleteExam(${index})" title="Delete this exam">🗑️ Delete</button>
             </div>
             
             <div class="note-input-container" id="note-container-${index}" style="display: none; margin-top: 1rem;">
@@ -289,7 +290,7 @@ function addNewExam(event) {
     const name = document.getElementById('examName').value.trim();
     const dateStr = document.getElementById('examDate').value;
     const category = document.getElementById('examCategory').value;
-    const type = document.getElementById('examType').value.trim();
+    const type = document.getElementById('examType').value;
     
     if (!name || !dateStr || !category || !type) {
         alert('Please fill in all fields');
@@ -324,6 +325,36 @@ function addNewExam(event) {
     hideAddExamForm();
     
     alert(`✅ "${name}" added successfully!`);
+}
+
+// Delete exam
+function deleteExam(index) {
+    const exam = examsData[index];
+    
+    if (!confirm(`Are you sure you want to delete "${exam.name}"?`)) {
+        return;
+    }
+    
+    // Remove from examsData
+    examsData.splice(index, 1);
+    
+    // Remove from custom exams if it exists there
+    const customExams = JSON.parse(localStorage.getItem('customExams')) || [];
+    const customIndex = customExams.findIndex(e => e.name === exam.name && new Date(e.date).getTime() === exam.date.getTime());
+    if (customIndex !== -1) {
+        customExams.splice(customIndex, 1);
+        localStorage.setItem('customExams', JSON.stringify(customExams));
+    }
+    
+    // Remove associated localStorage data
+    localStorage.removeItem(`exam-${index}-completed`);
+    localStorage.removeItem(`exam-${index}-note`);
+    
+    // Refresh UI
+    renderExams();
+    updateStats();
+    
+    alert(`✅ "${exam.name}" deleted successfully!`);
 }
 
 // Initialize on page load
