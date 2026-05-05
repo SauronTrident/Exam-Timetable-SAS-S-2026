@@ -157,7 +157,17 @@
                 </div>
                 <div class="form-group">
                     <label for="examType">Type *</label>
-                    <input type="text" id="examType" required placeholder="e.g., Written, Practical, Oral">
+                    <select id="examType" required>
+                        <option value="">-- Select Type --</option>
+                        <option value="WA1">WA1</option>
+                        <option value="WA2">WA2</option>
+                        <option value="WA3">WA3</option>
+                        <option value="WA4">WA4</option>
+                        <option value="End-of-Year">End-of-Year</option>
+                        <option value="Written">Written</option>
+                        <option value="Practical">Practical</option>
+                        <option value="Oral">Oral</option>
+                    </select>
                 </div>
                 <div class="form-actions">
                     <button type="submit" class="form-btn submit">➕ Add Exam</button>
