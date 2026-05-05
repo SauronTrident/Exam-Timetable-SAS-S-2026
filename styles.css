@@ -358,6 +358,16 @@ body.dark-mode {
     gap: 1.5rem;
 }
 
+.empty-state {
+    grid-column: 1 / -1;
+    padding: 1.5rem;
+    border: 2px dashed var(--border-color);
+    border-radius: 16px;
+    text-align: center;
+    color: var(--text-muted);
+    background: rgba(0, 0, 0, 0.12);
+}
+
 .exam-card {
     background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
     border: 2px solid var(--border-color);

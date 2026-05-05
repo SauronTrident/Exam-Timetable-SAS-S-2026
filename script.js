@@ -4,13 +4,30 @@ const REFERENCE_DATE = new Date();
 // All exam data
 const examsData = [];
 
+function createExamId(exam) {
+    if (globalThis.crypto && typeof globalThis.crypto.randomUUID === 'function') {
+        return globalThis.crypto.randomUUID();
+    }
+
+    return `exam-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
 // Load custom exams from localStorage
 function loadCustomExams() {
     const customExams = JSON.parse(localStorage.getItem('customExams')) || [];
+    let needsPersist = false;
     customExams.forEach(exam => {
         exam.date = new Date(exam.date);
+        if (!exam.id) {
+            exam.id = createExamId(exam);
+            needsPersist = true;
+        }
         examsData.push(exam);
     });
+
+    if (needsPersist) {
+        localStorage.setItem('customExams', JSON.stringify(customExams));
+    }
 }
 
 // Calculate days remaining
@@ -51,13 +68,14 @@ function createExamCard(exam, index) {
     const daysRemaining = calculateDaysRemaining(exam.date);
     const urgency = getUrgencyLevel(daysRemaining);
     const status = getStatusText(daysRemaining);
-    const isCompleted = localStorage.getItem(`exam-${index}-completed`) === 'true';
-    const examNote = localStorage.getItem(`exam-${index}-note`) || '';
+    const examId = exam.id || createExamId(exam);
+    const isCompleted = localStorage.getItem(`exam-${examId}-completed`) === 'true';
+    const examNote = localStorage.getItem(`exam-${examId}-note`) || '';
     
     const progressPercent = Math.max(0, Math.min(100, ((daysRemaining) / 187) * 100));
     
     const html = `
-        <div class="exam-card ${urgency} ${isCompleted ? 'completed' : ''}" data-index="${index}" data-category="${exam.category}" data-urgency="${urgency}">
+        <div class="exam-card ${urgency} ${isCompleted ? 'completed' : ''}" data-exam-id="${examId}" data-category="${exam.category}" data-urgency="${urgency}">
             <div class="exam-header">
                 <div class="exam-title">${exam.name}</div>
                 <div class="exam-date">${formatDate(exam.date)}</div>
@@ -80,16 +98,16 @@ function createExamCard(exam, index) {
             </div>
             
             <div class="exam-actions">
-                <button class="action-btn mark-complete-btn" onclick="toggleComplete(${index})">
+                <button class="action-btn mark-complete-btn" onclick="toggleComplete('${examId}')">
                     ${isCompleted ? '↩️ Undo' : '✓ Done'}
                 </button>
-                <button class="action-btn" onclick="toggleNoteInput(${index})">📝 Note</button>
-                <button class="action-btn delete-btn" onclick="deleteExam(${index})" title="Delete this exam">🗑️ Delete</button>
+                <button class="action-btn" onclick="toggleNoteInput('${examId}')">📝 Note</button>
+                <button class="action-btn delete-btn" onclick="deleteExam('${examId}')" title="Delete this exam">🗑️ Delete</button>
             </div>
             
-            <div class="note-input-container" id="note-container-${index}" style="display: none; margin-top: 1rem;">
-                <textarea class="note-input" id="note-input-${index}" placeholder="Add your study notes here..." style="width: 100%; padding: 0.5rem; border: 2px solid var(--border-color); border-radius: 8px; resize: vertical; min-height: 80px; font-family: inherit; background: var(--light-gray); color: var(--text-dark);">${examNote}</textarea>
-                <button class="action-btn primary" onclick="saveNote(${index})" style="margin-top: 0.5rem; width: 100%;">💾 Save Note</button>
+            <div class="note-input-container" id="note-container-${examId}" style="display: none; margin-top: 1rem;">
+                <textarea class="note-input" id="note-input-${examId}" placeholder="Add your study notes here..." style="width: 100%; padding: 0.5rem; border: 2px solid var(--border-color); border-radius: 8px; resize: vertical; min-height: 80px; font-family: inherit; background: var(--light-gray); color: var(--text-light);">${examNote}</textarea>
+                <button class="action-btn primary" onclick="saveNote('${examId}')" style="margin-top: 0.5rem; width: 100%;">💾 Save Note</button>
             </div>
         </div>
     `;
@@ -98,24 +116,24 @@ function createExamCard(exam, index) {
 }
 
 // Toggle complete status
-function toggleComplete(index) {
-    const isCompleted = localStorage.getItem(`exam-${index}-completed`) === 'true';
-    localStorage.setItem(`exam-${index}-completed`, !isCompleted);
+function toggleComplete(examId) {
+    const isCompleted = localStorage.getItem(`exam-${examId}-completed`) === 'true';
+    localStorage.setItem(`exam-${examId}-completed`, String(!isCompleted));
     renderExams();
     updateStats();
 }
 
 // Toggle note input
-function toggleNoteInput(index) {
-    const container = document.getElementById(`note-container-${index}`);
+function toggleNoteInput(examId) {
+    const container = document.getElementById(`note-container-${examId}`);
     container.style.display = container.style.display === 'none' ? 'block' : 'none';
 }
 
 // Save note
-function saveNote(index) {
-    const noteInput = document.getElementById(`note-input-${index}`);
+function saveNote(examId) {
+    const noteInput = document.getElementById(`note-input-${examId}`);
     const note = noteInput.value;
-    localStorage.setItem(`exam-${index}-note`, note);
+    localStorage.setItem(`exam-${examId}-note`, note);
     alert('Note saved! 📝');
 }
 
@@ -133,9 +151,8 @@ function renderExams() {
     let hasCustom = false;
     
     // Group by category
-    sortedExams.forEach((exam, index) => {
-        const originalIndex = examsData.findIndex(e => e.name === exam.name && e.date.getTime() === exam.date.getTime());
-        const card = createExamCard(exam, originalIndex);
+    sortedExams.forEach(exam => {
+        const card = createExamCard(exam);
         
         if (exam.category === 'wa2') {
             document.getElementById('wa2-list').innerHTML += card;
@@ -153,6 +170,11 @@ function renderExams() {
     if (customCategory) {
         customCategory.style.display = hasCustom ? 'block' : 'none';
     }
+
+    if (sortedExams.length === 0) {
+        document.getElementById('wa2-list').innerHTML = '<div class="empty-state">No exams yet. Add one to get started.</div>';
+        document.getElementById('o-level-list').innerHTML = '<div class="empty-state">No exams yet. Add one to get started.</div>';
+    }
     
     applyFilters();
 }
@@ -162,9 +184,10 @@ function updateStats() {
     const total = examsData.length;
     let urgent = 0, high = 0, planned = 0, completed = 0;
     
-    examsData.forEach((exam, index) => {
+    examsData.forEach(exam => {
         const daysRemaining = calculateDaysRemaining(exam.date);
-        const isCompleted = localStorage.getItem(`exam-${index}-completed`) === 'true';
+        const examId = exam.id || createExamId(exam);
+        const isCompleted = localStorage.getItem(`exam-${examId}-completed`) === 'true';
         
         if (isCompleted) {
             completed++;
@@ -175,7 +198,7 @@ function updateStats() {
         }
     });
     
-    const progressPercent = Math.round((completed / total) * 100);
+    const progressPercent = total === 0 ? 0 : Math.round((completed / total) * 100);
     
     document.getElementById('totalExams').textContent = total;
     document.getElementById('urgentCount').textContent = urgent;
@@ -192,8 +215,9 @@ function updateNextExam() {
     let nextExam = null;
     let minDays = Infinity;
     
-    examsData.forEach((exam, index) => {
-        const isCompleted = localStorage.getItem(`exam-${index}-completed`) === 'true';
+    examsData.forEach(exam => {
+        const examId = exam.id || createExamId(exam);
+        const isCompleted = localStorage.getItem(`exam-${examId}-completed`) === 'true';
         if (!isCompleted) {
             const daysRemaining = calculateDaysRemaining(exam.date);
             if (daysRemaining >= 0 && daysRemaining < minDays) {
@@ -218,6 +242,13 @@ function updateNextExam() {
         const badge = document.getElementById('nextExamStatus');
         badge.textContent = status;
         badge.className = `urgency-badge ${urgency}`;
+    } else {
+        document.getElementById('nextDaysCount').textContent = '0';
+        document.getElementById('nextExamName').textContent = 'No exams added yet';
+        document.getElementById('nextExamDate').textContent = 'Add an exam to get started';
+        const badge = document.getElementById('nextExamStatus');
+        badge.textContent = 'NO EXAMS';
+        badge.className = 'urgency-badge planned';
     }
 }
 
@@ -303,7 +334,8 @@ function addNewExam(event) {
         name,
         date: new Date(year, month - 1, day),
         category,
-        type
+        type,
+        id: createExamId({ name, date: new Date(year, month - 1, day), category })
     };
     
     // Add to examsData
@@ -315,7 +347,8 @@ function addNewExam(event) {
         name: newExam.name,
         date: newExam.date.toISOString(),
         category: newExam.category,
-        type: newExam.type
+        type: newExam.type,
+        id: newExam.id
     });
     localStorage.setItem('customExams', JSON.stringify(customExams));
     
@@ -328,8 +361,12 @@ function addNewExam(event) {
 }
 
 // Delete exam
-function deleteExam(index) {
+function deleteExam(examId) {
+    const index = examsData.findIndex(exam => (exam.id || createExamId(exam)) === examId);
     const exam = examsData[index];
+    if (!exam) {
+        return;
+    }
     
     if (!confirm(`Are you sure you want to delete "${exam.name}"?`)) {
         return;
@@ -340,15 +377,15 @@ function deleteExam(index) {
     
     // Remove from custom exams if it exists there
     const customExams = JSON.parse(localStorage.getItem('customExams')) || [];
-    const customIndex = customExams.findIndex(e => e.name === exam.name && new Date(e.date).getTime() === exam.date.getTime());
+    const customIndex = customExams.findIndex(e => (e.id || createExamId({ name: e.name, date: new Date(e.date), category: e.category })) === examId);
     if (customIndex !== -1) {
         customExams.splice(customIndex, 1);
         localStorage.setItem('customExams', JSON.stringify(customExams));
     }
     
     // Remove associated localStorage data
-    localStorage.removeItem(`exam-${index}-completed`);
-    localStorage.removeItem(`exam-${index}-note`);
+    localStorage.removeItem(`exam-${examId}-completed`);
+    localStorage.removeItem(`exam-${examId}-note`);
     
     // Refresh UI
     renderExams();
