@@ -33,6 +33,15 @@ const examsData = [
     { name: 'Physics Paper 1', date: new Date(2026, 10, 6), category: 'o-level', type: 'O-Level' }
 ];
 
+// Load custom exams from localStorage
+function loadCustomExams() {
+    const customExams = JSON.parse(localStorage.getItem('customExams')) || [];
+    customExams.forEach(exam => {
+        exam.date = new Date(exam.date);
+        examsData.push(exam);
+    });
+}
+
 // Calculate days remaining
 function calculateDaysRemaining(examDate) {
     const today = REFERENCE_DATE;
@@ -143,9 +152,13 @@ function renderExams() {
     // Clear existing exams
     document.getElementById('wa2-list').innerHTML = '';
     document.getElementById('o-level-list').innerHTML = '';
+    const customList = document.getElementById('custom-list');
+    if (customList) customList.innerHTML = '';
     
     // Sort exams by date
     const sortedExams = [...examsData].sort((a, b) => a.date - b.date);
+    
+    let hasCustom = false;
     
     // Group by category
     sortedExams.forEach((exam, index) => {
@@ -156,8 +169,18 @@ function renderExams() {
             document.getElementById('wa2-list').innerHTML += card;
         } else if (exam.category === 'o-level') {
             document.getElementById('o-level-list').innerHTML += card;
+        } else if (exam.category === 'custom') {
+            hasCustom = true;
+            const customList = document.getElementById('custom-list');
+            if (customList) customList.innerHTML += card;
         }
     });
+    
+    // Show/hide custom category section
+    const customCategory = document.getElementById('custom-category');
+    if (customCategory) {
+        customCategory.style.display = hasCustom ? 'block' : 'none';
+    }
     
     applyFilters();
 }
@@ -277,8 +300,64 @@ function setupDarkMode() {
     });
 }
 
+// Show add exam modal
+function showAddExamForm() {
+    document.getElementById('addExamModal').classList.add('active');
+}
+
+// Hide add exam modal
+function hideAddExamForm() {
+    document.getElementById('addExamModal').classList.remove('active');
+    document.getElementById('addExamForm').reset();
+}
+
+// Add new exam
+function addNewExam(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('examName').value.trim();
+    const dateStr = document.getElementById('examDate').value;
+    const category = document.getElementById('examCategory').value;
+    const type = document.getElementById('examType').value.trim();
+    
+    if (!name || !dateStr || !category || !type) {
+        alert('Please fill in all fields');
+        return;
+    }
+    
+    // Parse the date
+    const [year, month, day] = dateStr.split('-');
+    const newExam = {
+        name,
+        date: new Date(year, month - 1, day),
+        category,
+        type
+    };
+    
+    // Add to examsData
+    examsData.push(newExam);
+    
+    // Save to localStorage
+    const customExams = JSON.parse(localStorage.getItem('customExams')) || [];
+    customExams.push({
+        name: newExam.name,
+        date: newExam.date.toISOString(),
+        category: newExam.category,
+        type: newExam.type
+    });
+    localStorage.setItem('customExams', JSON.stringify(customExams));
+    
+    // Refresh UI
+    renderExams();
+    updateStats();
+    hideAddExamForm();
+    
+    alert(`✅ "${name}" added successfully!`);
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+    loadCustomExams();
     renderExams();
     updateStats();
     setupFilterButtons();

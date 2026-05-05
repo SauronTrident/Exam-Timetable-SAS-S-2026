@@ -91,7 +91,10 @@
     <!-- Filter Section -->
     <section class="filter-section">
         <div class="filter-container">
-            <h3>Filter Exams</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3>Filter Exams</h3>
+                <button class="add-exam-btn" onclick="showAddExamForm()" title="Add a new exam">➕ Add Exam</button>
+            </div>
             <div class="filter-buttons">
                 <button class="filter-btn active" data-filter="all">All</button>
                 <button class="filter-btn" data-filter="urgent">⚠️ Urgent</button>
@@ -118,8 +121,51 @@
                 <h3 class="category-title">🎓 O-LEVELS (JUNE - NOVEMBER)</h3>
                 <div class="exams-list" id="o-level-list"></div>
             </div>
+
+            <!-- Custom Exams Section -->
+            <div class="exam-category" data-category="custom" style="display: none;" id="custom-category">
+                <h3 class="category-title">✨ CUSTOM EXAMS</h3>
+                <div class="exams-list" id="custom-list"></div>
+            </div>
         </div>
     </section>
+
+    <!-- Add Exam Modal -->
+    <div class="modal" id="addExamModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Exam</h2>
+                <button class="modal-close" onclick="hideAddExamForm()">✕</button>
+            </div>
+            <form id="addExamForm" onsubmit="addNewExam(event)">
+                <div class="form-group">
+                    <label for="examName">Exam Name *</label>
+                    <input type="text" id="examName" required placeholder="e.g., Biology Paper 1">
+                </div>
+                <div class="form-group">
+                    <label for="examDate">Date *</label>
+                    <input type="date" id="examDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="examCategory">Category *</label>
+                    <select id="examCategory" required>
+                        <option value="">-- Select Category --</option>
+                        <option value="wa2">WA2 Assessment</option>
+                        <option value="o-level">O-Level</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="examType">Type *</label>
+                    <input type="text" id="examType" required placeholder="e.g., Written, Practical, Oral">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="form-btn submit">➕ Add Exam</button>
+                    <button type="button" class="form-btn cancel" onclick="hideAddExamForm()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
