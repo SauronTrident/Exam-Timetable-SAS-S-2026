@@ -2,36 +2,7 @@
 const REFERENCE_DATE = new Date();
 
 // All exam data
-const examsData = [
-    // WA2 Assessments
-    { name: 'Mathematics WA2', date: new Date(2026, 4, 4), category: 'wa2', type: 'WA2' },
-    { name: 'Social Studies WA2', date: new Date(2026, 4, 4), category: 'wa2', type: 'WA2' },
-    { name: 'Additional Mathematics WA2', date: new Date(2026, 4, 5), category: 'wa2', type: 'WA2' },
-    { name: 'Chemistry WA2', date: new Date(2026, 4, 6), category: 'wa2', type: 'WA2' },
-    
-    // O-Levels
-    { name: 'Tamil Paper 1 & 2', date: new Date(2026, 5, 2), category: 'o-level', type: 'O-Level' },
-    { name: 'Tamil Listening Comprehension', date: new Date(2026, 6, 7), category: 'o-level', type: 'O-Level' },
-    { name: 'English Oral', date: new Date(2026, 6, 14), category: 'o-level', type: 'O-Level' },
-    { name: 'Tamil Oral Day 1', date: new Date(2026, 6, 16), category: 'o-level', type: 'O-Level' },
-    { name: 'Tamil Oral Day 2', date: new Date(2026, 6, 16), category: 'o-level', type: 'O-Level' },
-    { name: 'Tamil Oral Day 3', date: new Date(2026, 6, 17), category: 'o-level', type: 'O-Level' },
-    { name: 'English Oral Day 2', date: new Date(2026, 6, 17), category: 'o-level', type: 'O-Level' },
-    { name: 'Chemistry Practical', date: new Date(2026, 8, 30), category: 'o-level', type: 'O-Level' },
-    { name: 'Physics Practical', date: new Date(2026, 9, 5), category: 'o-level', type: 'O-Level' },
-    { name: 'English Paper 1 & 2', date: new Date(2026, 9, 19), category: 'o-level', type: 'O-Level' },
-    { name: 'History Paper', date: new Date(2026, 9, 20), category: 'o-level', type: 'O-Level' },
-    { name: 'Mathematics Paper 1', date: new Date(2026, 9, 21), category: 'o-level', type: 'O-Level' },
-    { name: 'Mathematics Paper 2', date: new Date(2026, 9, 23), category: 'o-level', type: 'O-Level' },
-    { name: 'Social Studies Paper', date: new Date(2026, 9, 26), category: 'o-level', type: 'O-Level' },
-    { name: 'Additional Mathematics Paper 1', date: new Date(2026, 9, 26), category: 'o-level', type: 'O-Level' },
-    { name: 'Chemistry Paper 2', date: new Date(2026, 9, 27), category: 'o-level', type: 'O-Level' },
-    { name: 'Additional Mathematics Paper 2', date: new Date(2026, 9, 28), category: 'o-level', type: 'O-Level' },
-    { name: 'Physics Paper 2', date: new Date(2026, 9, 29), category: 'o-level', type: 'O-Level' },
-    { name: 'Tamil Paper 1 & 2', date: new Date(2026, 10, 3), category: 'o-level', type: 'O-Level' },
-    { name: 'Chemistry Paper 1', date: new Date(2026, 10, 6), category: 'o-level', type: 'O-Level' },
-    { name: 'Physics Paper 1', date: new Date(2026, 10, 6), category: 'o-level', type: 'O-Level' }
-];
+const examsData = [];
 
 // Load custom exams from localStorage
 function loadCustomExams() {
