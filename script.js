@@ -30,6 +30,20 @@ function loadCustomExams() {
     }
 }
 
+function setupExamTypeOptions() {
+    const examTypeSelect = document.getElementById('examType');
+    if (!examTypeSelect) return;
+
+    examTypeSelect.innerHTML = `
+        <option value="">-- Select Type --</option>
+        <option value="WA1">WA1</option>
+        <option value="WA2">WA2</option>
+        <option value="WA3">WA3</option>
+        <option value="WA4">WA4</option>
+        <option value="End-of-Year">End-of-Year</option>
+    `;
+}
+
 // Calculate days remaining
 function calculateDaysRemaining(examDate) {
     const today = REFERENCE_DATE;
@@ -396,6 +410,7 @@ function deleteExam(examId) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+    setupExamTypeOptions();
     loadCustomExams();
     renderExams();
     updateStats();
